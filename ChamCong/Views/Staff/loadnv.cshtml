@@ -1,0 +1,365 @@
+﻿@using ChamCong.Models;
+@{
+    ViewBag.Title = "DanhSachNhanVien";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var IsAllowAddStaff = ViewBag.IsAllowAddStaff != null ? (bool)ViewBag.IsAllowAddStaff : false;
+}
+<script src="~/Scripts/plugin/mustache.js"></script>
+<script src="~/Scripts/Load_Dsnhanvien.js"></script>
+
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="fw-bold py-3 mb-4">DANH SÁCH NHÂN SỰ</h4>
+        <!-- Navbar -->
+
+        <form>
+            <div class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme mb-5" style="z-index: 0 !important;">
+                <div class="navbar-nav align-items-center">
+                    <div class="nav-item d-flex align-items-center">
+                        <button id="btnSearch" style="border: none; background-color:transparent;"><i class="bx bx-search fs-4 lh-0"></i></button>
+                        <input class="form-control border-0 shadow-none" type="text" name="searchName" placeholder="Tìm kiếm tên nhân viên" id="txtSearch" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        @if (IsAllowAddStaff)
+        {
+            <div class="d-flex justify-content-sm-between">
+                <div class="">
+
+                    <button type="button" class="btn btn-outline-primary py-2 mb-5" id="btnAdd">Thêm nhân viên</button>
+                </div>
+                <div class="">
+                    <button class="btn btn-outline-success py-2 mb-5" id="export-btn">Xuất file Excel</button>
+                </div>
+            </div>
+        }
+            <!-- / Navbar -->
+            <!-- Hoverable Table rows -->
+            <div class="card">
+                <div class="table-responsive text-nowrap">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã nhân viên</th>
+                                <th>Họ tên</th>
+                                <th>Giới tính</th>
+                                <th>Chức vụ</th>
+                                <th>Số điện thoại</th>
+                                <th>ngày sinh</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0" id="LoadDsnv">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal thêm nv -->
+            <div class="modal fade" id="modalAdd" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel1">Thêm nhân viên</h5>
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="nameModal" class="form-label">Họ tên</label>
+                                    <input type="text" id="nameModal" class="form-control" />
+                                </div>
+                                <div class="col">
+                                    <label for="emailModal" class="form-label">Email</label>
+                                    <input type="text" id="emailModal" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="birthdateModal" class="form-label">Ngày sinh</label>
+                                    <input type="date" id="birthdateModal" class="form-control" />
+                                </div>
+                                <div class="col">
+                                    <label for="genderModal" class="form-label">Giới tính</label>
+                                    <select class="form-select" id="genderModal">
+                                        <option value="1">Nam</option>
+                                        <option value="2">Nữ</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="phoneModal" class="form-label">Số điện thoại</label>
+                                    <input type="text" id="phoneModal" class="form-control" />
+                                </div>
+                                <div class="col">
+                                    <label for="identityModal" class="form-label">Số căn cước</label>
+                                    <input type="text" id="identityModal" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="addModal" class="form-label">Địa chỉ</label>
+                                    <input type="text" id="addrModal" class="form-control" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="countryModal" class="form-label">Quê quán</label>
+                                    <input type="text" id="countryModal" class="form-control" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="regionModal" class="form-label">Dân tộc</label>
+                                    <input type="text" id="regionModal" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="salaryModal" class="form-label">Lương cơ bản</label>
+                                    <input type="text" id="salaryModal" class="form-control" />
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="positionModal" class="form-label">Chức vụ</label>
+                                    <select class="form-select" id="positionModal">
+                                        @{
+                                            foreach (var item in ViewBag.cvu)
+                                            {
+                                                <option value="@item.ID_CHUCVU">@item.TENCHUCVU</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="roomModal" class="form-label">Phòng ban</label>
+                                    <select class="form-select" id="roomModal">
+                                        @{
+
+                                            foreach (var item in ViewBag.tenpb)
+                                            {
+                                                <option value="@item.ID_PHONGBAN">@item.TENPB</option>
+                                            }
+
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="levelModal" class="form-label">Trình độ</label>
+                                    <select class="form-select" id="levelModal">
+                                        @{
+                                            foreach (var item in ViewBag.tdo)
+                                            {
+                                                <option value="@item.ID_TRINHDO">@item.TEN_TD</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="btnSaveAdd">Lưu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal sửa -->
+            <div class="modal fade" id="modalEdit" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel1">Thông tin nhân viên</h5>
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close">
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="nameModal1" class="form-label">Họ tên</label>
+                                    <input type="text" id="nameModal1" class="form-control" />
+                                </div>
+                                <div class="col">
+                                    <label for="emailModal1" class="form-label">Email</label>
+                                    <input type="text" id="emailModal1" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="birthdateModal1" class="form-label">Ngày sinh</label>
+                                    <input type="date" id="birthdateModal1" class="form-control" />
+                                </div>
+                                <div class="col">
+                                    <label for="genderModal1" class="form-label">Giới tính</label>
+                                    <select class="form-select" id="genderModal1">
+                                        <option value="1" selected>Nam</option>
+                                        <option value="2">Nữ</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label for="phoneModal1" class="form-label">Số điện thoại</label>
+                                    <input type="text" id="phoneModal1" class="form-control" />
+                                </div>
+                                <div class="col">
+                                    <label for="identityModal1" class="form-label">Số căn cước</label>
+                                    <input type="text" id="identityModal1" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="addModal1" class="form-label">Địa chỉ</label>
+                                    <input type="text" id="addrModal1" class="form-control" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="countryModal1" class="form-label">Quê quán</label>
+                                    <input type="text" id="countryModal1" class="form-control" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="regionModal1" class="form-label">Dân tộc</label>
+                                    <input type="text" id="regionModal1" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="salaryModal1" class="form-label">Lương cơ bản</label>
+                                    <input type="text" id="salaryModal1" class="form-control" />
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="positionModal1" class="form-label">Chức vụ</label>
+                                    <select class="form-select" id="positionModal1">
+                                        @{
+                                            foreach (var item in ViewBag.cvu)
+                                            {
+                                                <option value="@item.ID_CHUCVU">@item.TENCHUCVU</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="roomModal1" class="form-label">Phòng ban</label>
+                                    <select class="form-select" id="roomModal1">
+                                        @{
+
+                                            foreach (var item in ViewBag.tenpb)
+                                            {
+                                                <option value="@item.ID_PHONGBAN">@item.TENPB</option>
+                                            }
+
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="levelModal1" class="form-label">Trình độ</label>
+                                    <select class="form-select" id="levelModal1">
+                                        @{
+                                            foreach (var item in ViewBag.tdo)
+                                            {
+                                                <option value="@item.ID_TRINHDO">@item.TEN_TD</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="btnEdit">Chỉnh sửa</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- / Content -->
+<script id="data-template" type="x-tmpl-mustache">
+                            <tr>
+                                <td>{{ID}}</td>
+                                <td><i class="fab fa-angular fa-lg text-danger"></i> <strong>{{HOTEN}}</strong></td>
+                                <td>{{GIOITINH}}</td>
+                                <td>{{TENCV}}</td>
+                                <td>{{SDT}}</td>
+                                <td>{{NGAYSINH}}</td>
+                                <td>
+                                    @*<button onclick="showInfo({{ID}})" type="button"
+                                            class="btn rounded-pill btn-outline-dark"
+                                            data-bs-target="#modalEdit"
+                                            data-bs-toggle="modal"
+                                            data-bs-offset="0,4"
+                                            data-bs-placement="top"
+                                            data-bs-html="true"
+                                            title="Xem chi tiết">
+                                        <i class='bx bx-edit'></i>
+                                    </button>*@
+                                    {{#IsAllowEdit}}
+                                        <button onclick="showInfo({{ID}})" type="button"
+                                            class="btn rounded-pill btn-outline-dark"
+                                            data-bs-target="#modalEdit"
+                                            data-bs-toggle="modal"
+                                            data-bs-offset="0,4"
+                                            data-bs-placement="top"
+                                            data-bs-html="true"
+                                            title="Xem chi tiết">
+                                        <i class='bx bx-edit'></i>
+                                        </button>
+
+                                     {{/IsAllowEdit}}
+
+                                    {{#IsAllowDelete}}
+                                    <button onclick="XoaNhanVien({{ID}})" type="button"
+                                            class="btn rounded-pill btn-outline-danger"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-offset="0,4"
+                                            data-bs-placement="top"
+                                            data-bs-html="true"
+                                            title="Xóa">
+
+                                        <i class='bx bxs-eraser'></i>
+                                    </button>
+                                    {{/IsAllowDelete}}
+
+
+                                </td>
+                            </tr>
+
+
+</script>
+
+        <div class="mt-3" id="pagination"></div>
+        <script>
+            $('form').on('submit', function (event) {
+                event.preventDefault();
+                var searchName = $('#txtSearch').val();
+                StaffController.dsNhanvien(searchName);
+            });
+        </script>
+        <script src="~/Scripts/dsNhanvien/Addnvien.js"></script>
+        <script src="~/Scripts/dsNhanvien/Editnvien.js"></script>
+        <script src="~/Scripts/dsNhanvien/Xoanvien.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                // Xử lý sự kiện click vào nút xuất file Excel
+                $('#export-btn').click(function () {
+                    // Gửi yêu cầu xuất file Excel đến phương thức ExportToExcel trong controller
+                    window.location.href = '/Staff/ExportToExcel';
+                });
+            });
+        </script>
+        

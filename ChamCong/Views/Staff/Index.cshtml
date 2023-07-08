@@ -1,0 +1,171 @@
+﻿@using ChamCong.Models;
+@model List<ChamCong.Models.tblNHANVIEN>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row">
+            <div class="card-body">
+                <form id="formAccountSettings" method="POST" onsubmit="return false">
+                    <div class="row">
+
+                        @{
+                            tblNHANVIEN item = ViewBag.nhanvien;
+                            <div class="mb-3 col-md-6">
+                                <label for="ID_nhanvien" class="form-label">Mã nhân viên</label>
+                                <input readonly="true"
+                                       class="form-control"
+                                       type="text"
+                                       id="ID_nhanvien"
+                                       name="ID_nhanvien"
+                                       value="@item.ID_NHANVIEN"
+                                       autofocus />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="phongban" class="form-label">Phòng ban</label>
+                                <input class="form-control" type="text" id="phongban" name="phongban" value="@Session["ID_PHONGBAN"]" readonly="true" />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="hoten" class="form-label">Họ tên</label>
+                                <input class="form-control" type="text" name="hoten" id="hoten" readonly="true" value="@item.HOTEN" />
+                            </div>
+                            <div class="mb-3 col-md-3">
+                                <label for="chucvu" class="form-label">Chức vụ</label>
+                                <input class="form-control" type="text" id="chucvu" name="chucvu" value="@Session["ID_CHUCVU"]" readonly="true" />
+                            </div>
+                            <div class="mb-3 col-md-3">
+                                <label for="trinhdo" class="form-label">Trình độ</label>
+                                <input class="form-control" type="text" id="trinhdo" name="trinhdo" value="@Session["ID_TRINHDO"]" readonly="true" />
+                            </div>
+                            <div class="mb-3 col-md-3">
+                                <label for="dantoc" class="form-label">Dân tộc</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="dantoc"
+                                       name="dantoc"
+                                       value="@item.DANTOC"
+                                       readonly="true" />
+                            </div>
+
+
+
+                            <div class="mb-3 col-md-3">
+                                <label for="ngaysinh" class="form-label">Ngày sinh</label>
+                                <input class="form-control" type="text" id="ngaysinh" name="ngaysinh"
+                                       value="@item.NGAYSINH.Value.ToString("dd/MM/yyyy")" readonly="true" />
+                            </div>
+                            if (item.GIOITINH == true)
+                            {
+                                <div class="mb-3 col-md-6">
+                                    <label for="gender" class="form-label">Giới tính</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="gender"
+                                           name="gender"
+                                           value="Nam"
+                                           readonly="true" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="mb-3 col-md-6">
+                                    <label for="gender" class="form-label">Giới tính</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="gender"
+                                           name="gender"
+                                           value="Nữ"
+                                           readonly="true" />
+                                </div>
+                            }
+                            <div class="mb-3 col-md-6">
+                                <label for="CCCD" class="form-label">CCCD</label>
+                                <input class="form-control"
+                                       type="text"
+                                       id="CCCD"
+                                       name="CCCD"
+                                       value="@item.CCCD"
+                                       readonly="true" />
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                                <label class="form-label" for="SDT">Số điện thoại</label>
+                                <div class="input-group input-group-merge">
+                                    <input type="text"
+                                           id="SDT"
+                                           name="SDT"
+                                           class="form-control"
+                                           value=" @item.SDT" 
+                                           />
+                                </div>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="DIACHI" class="form-label">Địa chỉ</label>
+                                <input type="text" class="form-control" id="DIACHI" name="DIACHI" value="@item.DIACHI"/>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="QUEQUAN" class="form-label">Quê quán</label>
+                                <input class="form-control" type="text" id="QUEQUAN" name="QUEQUAN" value="@item.QUEQUAN"/>
+                            </div>
+                        }
+
+
+
+                    </div>
+                    <div class="mt-2">
+                        <button id="btnUpdate" class="btn btn-primary me-2">Chỉnh sửa thông tin</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+    </div>
+    <!-- / Content -->
+   
+    
+   
+
+</div>
+<!-- Content wrapper -->
+
+<script>
+    document.getElementById("btnUpdate").addEventListener("click", function () {
+    var sdt = document.getElementById("SDT").value;
+    var diachi = document.getElementById("DIACHI").value;
+    var quequan = document.getElementById("QUEQUAN").value;
+
+    // Kiểm tra tính hợp lệ của các trường dữ liệu
+    if (sdt.trim() === "" || diachi.trim() === "" || quequan.trim() === "") {
+        alert("Vui lòng nhập đầy đủ thông tin.");
+        return;
+    }
+    var phoneNumberRegex = /^(0|\+84)\d{9}$/; // regex for 10-digit phone number
+    if (!phoneNumberRegex.test(sdt)) {
+        alert("Số điện thoại không hợp lệ!");
+        return;
+    }
+
+    // Gửi dữ liệu lên server bằng AJAX
+    $.ajax({
+        url: '@Url.Action("UpdateProfile", "Staff")',
+        type: 'POST',
+        data: {
+            sdt: sdt,
+            diachi: diachi,
+            quequan: quequan
+        },
+        success: function (data) {
+            window.location.href = '@Url.Action("Index", "Staff")';
+            alert("Chỉnh sửa thông tin thành công!");
+        }
+    });
+});
+
+</script>    

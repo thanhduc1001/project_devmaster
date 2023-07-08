@@ -1,0 +1,65 @@
+﻿@using ChamCong.Models;
+@{
+    ViewBag.Title = "DanhSachPhongBan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Content -->
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="fw-bold py-3 mb-4">DANH SÁCH PHÒNG BAN</h4>
+        </div>
+        <div class="">
+            <form method="get">
+                <div class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme mb-4" style="z-index: 0 !important;">
+                    <div class="navbar-nav align-items-center">
+                        <div class="nav-item d-flex align-items-center">
+                            <button style="border: none; background-color:transparent;"><i class="bx bx-search fs-4 lh-0"></i></button>
+                            <input class="form-control border-0 shadow-none" type="text" name="name" placeholder="Tìm kiếm tên phòng ban" />
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Hoverable Table rows -->
+    <div class="card">
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
+                    <tr class="text-center">
+                        <th>STT</th>
+                        <th>Mã phòng ban</th>
+                        <th>Tên phòng ban</th>
+                        <th>Số nhân viên</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @{
+                            var stt = 1;
+                            foreach (var i in ViewBag.result)
+                            {
+                            <tr class="text-center">
+                                <td>@stt</td>
+                                <td>@i.ID</td>
+                                <td>@i.Name</td>
+                                <td>@i.SoNV</td>
+                                <td>
+                                    <a href="/Staff/detailPhongban?id=@i.ID" class="btn btn-outline-primary">Chi tiết</a>
+                                </td>
+                            </tr>
+                            stt++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--/ Hoverable Table rows -->
+
+ 
+</div>
+<!-- / Content -->

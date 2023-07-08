@@ -1,0 +1,72 @@
+﻿@using ChamCong.Models;
+@{
+    ViewBag.Title = "BangCong";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Content -->
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="fw-bold py-3 mb-4">BẢNG CÔNG CỦA BẠN</h4>
+        </div>
+    </div>
+    <!-- Hoverable Table rows -->
+    <div class="input-group mb-4" style="width: 40%;">
+        <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+            <option value="0">--Chọn tháng--</option>
+            @foreach (var month in ViewBag.Months)
+            {
+                <option value="@month.Value">@month.Text</option>
+            }
+        </select>
+        <button class="btn btn-outline-primary" type="button" id="btnMonth">Tìm kiếm theo tháng</button>
+    </div>
+
+    <div class="card">
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
+                    <tr class="text-center">
+                        <th>Mã nhân viên</th>
+                        <th>Họ tên</th>
+                        <th>Số công</th>
+                        <th>Đi muộn</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @{
+                        foreach (var bc in ViewBag.data)
+                        {
+                            <tr class="text-center">
+                                <td>@bc.ID_NHANVIEN</td>
+                                <td>@bc.HoTen</td>
+                                <td>@bc.SoNgayVao</td>
+                                <td>@bc.NgayDiMuon</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- / Content -->
+<script>
+    $(document).ready(function () {
+    $('#btnMonth').click(function () {
+        var selectedMonth = $('#inputGroupSelect04').val();
+        var url = new URL(window.location.href);
+        url.searchParams.set('month', selectedMonth);
+        window.location.href = url.toString();
+    });
+
+    // Đặt lại giá trị đã chọn trong ô select nếu có tham số month trong URL
+    var searchParams = new URLSearchParams(window.location.search);
+    var selectedMonth = searchParams.get('month');
+    if (selectedMonth) {
+        $('#inputGroupSelect04').val(selectedMonth);
+    }
+});
+
+</script>

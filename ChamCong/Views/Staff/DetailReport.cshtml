@@ -1,0 +1,127 @@
+﻿@using ChamCong.Models;
+@model BaoCaoViewModel 
+@{
+    ViewBag.Title = "DetailReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Content -->
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="fw-bold py-3 mb-4">DANH SÁCH BÁO CÁO</h4>
+        </div>
+    </div>
+    <!-- Hoverable Table rows -->
+    <div class="input-group mb-4" style="width: 40%;">
+        <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+            <option value="0">--Chọn tháng--</option>
+            @foreach (var month in ViewBag.months)
+            {
+                <option value="@month.Value">@month.Text</option>
+            }
+        </select>
+        <button class="btn btn-outline-primary" type="button" id="btnMonth">Tìm kiếm theo tháng</button>
+    </div>
+
+    <div class="card">
+        <div class="table-responsive text-nowrap">
+            <table class="table table-hover">
+                <thead>
+                    <tr class="text-center">
+                        <th>Mã nhân viên</th>
+                        <th>Họ tên</th>
+                        <th>Ngày báo cáo</th>
+                        <th>Nội dung báo cáo</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    @{
+                        foreach (var item in ViewBag.query)
+                        {
+
+                            <tr class="text-center">
+                                <td>@item.ID_NHANVIEN</td>
+                                <td>@item.HOTEN</td>
+                                <td>@item.NGAY_BAOCAO.ToString("dd/MM/yyyy")</td>
+                                <td>@item.NOIDUNG</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--/ Hoverable Table rows -->
+    @*<div class="row">
+            <div class="demo-inline-spacing">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item prev">
+                            <a class="page-link" href="javascript:void(0);" id="prevPage">
+                                <i class="tf-icon bx bx-chevrons-left"></i>
+                            </a>
+                        </li>
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                <a class="page-link" href="?page=@i">@i</a>
+                            </li>
+                        }
+                        <li class="page-item next">
+                            <a class="page-link" href="javascript:void(0);" id="nextPage">
+                                <i class="tf-icon bx bx-chevrons-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>*@
+</div>
+<!-- / Content -->
+<script>
+    $(document).ready(function () {
+        $('#btnMonth').click(function () {
+            var month = $('#inputGroupSelect04').val();
+            var url = window.location.href.split('?')[0];
+            window.location.href = url + '?month=' + month;
+        });
+
+        // Đặt lại giá trị đã chọn trong ô select nếu có tham số month trong URL
+        var searchParams = new URLSearchParams(window.location.search);
+        var selectedMonth = searchParams.get('month');
+        if (selectedMonth) {
+            $('#inputGroupSelect04').val(selectedMonth);
+        }
+    });
+
+    // Xử lý khi nhấp vào nút "left"
+    @*document.getElementById("prevPage").addEventListener("click", function() {
+        var currentPage = parseInt("@ViewBag.CurrentPage");
+        if (currentPage > 1) {
+            var prevPage = currentPage - 1;
+            window.location.href = "?page=" + prevPage;
+        }
+    });
+
+    // Xử lý khi nhấp vào nút "right"
+    document.getElementById("nextPage").addEventListener("click", function() {
+        var currentPage = parseInt("@ViewBag.CurrentPage");
+        var totalPages = parseInt("@ViewBag.TotalPages");
+        if (currentPage < totalPages) {
+            var nextPage = currentPage + 1;
+            window.location.href = "?page=" + nextPage;
+        }
+    });
+    // Ẩn nút "prevPage" khi đang ở trang đầu tiên
+    var currentPage = parseInt("@ViewBag.CurrentPage");
+    if (currentPage === 1) {
+        document.getElementById("prevPage").style.display = "none";
+    }
+
+    // Ẩn nút "nextPage" khi đang ở trang cuối cùng
+    var totalPages = parseInt("@ViewBag.TotalPages");
+    if (currentPage === totalPages) {
+        document.getElementById("nextPage").style.display = "none";
+    }*@
+</script>

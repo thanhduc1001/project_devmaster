@@ -1,0 +1,93 @@
+﻿@using ChamCong.Models;
+@model LuongNhanVien
+@{
+    ViewBag.Title = "TinhLuong";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Content -->
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="fw-bold py-3 mb-4">BẢNG LƯƠNG CỦA BẠN</h4>
+        </div>
+        <div class="input-group mb-4" style="width: 40%;">
+            <select class="form-select" id="selectedMonth" aria-label="Example select with button addon">
+                <option value="0">--Chọn tháng--</option>
+                @foreach (var month in ViewBag.months)
+                {
+                    <option value="@month.Value">@month.Text</option>
+                }
+            </select>
+            <button class="btn btn-outline-primary" type="button" id="btnMonth">Tìm kiếm theo tháng</button>
+        </div>
+    </div>
+    <!-- Hoverable Table rows -->
+    <form id="frmCapNhatLuong">
+        <div class="card">
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="text-center">
+                            <th>Mã nhân viên</th>
+                            <th>Họ tên</th>
+                            <th>Số công</th>
+                            <th>Lương cơ bản</th>
+                            <th>Phụ cấp</th>
+                            <th>Bảo hiểm</th>
+                            <th>Tổng lương</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        @{
+                            foreach (var item in ViewBag.query)
+                            {
+                                <tr class="text-center">
+                                    <td>@item.ID_NHANVIEN</td>
+                                    <td>@item.HoTen</td>
+                                    <td>@item.SoNgayChamCong</td>
+                                    <td>
+                                        <input type="number" class="form-control" name="luongcb" value="@item.Luong_CB" style="width: 120px" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" name="sotien" value="@item.SoTien" style="width: 110px" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" name="mucdong" value="@item.Muc_Dong" style="width: 110px" />
+                                    </td>
+                                    <td class="convert-number">@item.TongLuong</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- / Content -->
+<script>
+    document.querySelectorAll('.convert-number').forEach(function (element) {
+        var number = element.textContent.split(' ')[0];
+        element.textContent = Number(number).toLocaleString('vi-VN');
+    });
+
+
+    $(document).ready(function () {
+        $('#btnMonth').click(function () {
+            var selectedMonth = $('#selectedMonth').val();
+            var url = window.location.href.split('?')[0];
+            window.location.href = url + '?selectedMonth=' + selectedMonth;
+        });
+
+        // Đặt lại giá trị đã chọn trong ô select nếu có tham số selectedMonth trong URL
+        var searchParams = new URLSearchParams(window.location.search);
+        var selectedMonth = searchParams.get('selectedMonth');
+        if (selectedMonth) {
+            $('#selectedMonth').val(selectedMonth);
+        }
+    });
+
+</script>
+
+

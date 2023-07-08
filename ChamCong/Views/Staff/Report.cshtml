@@ -1,0 +1,111 @@
+﻿@using ChamCong.Models;
+@model List<ChamCong.Models.tblNHANVIEN>
+@{
+    ViewBag.Title = "Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        @{
+            // Lấy thời gian hiện tại
+            DateTime now = DateTime.Now;
+
+            // Định dạng ngày tháng theo định dạng "Ngày dd 'tháng' MM 'năm' yyyy"
+            string formattedDate = now.ToString("'NGÀY' dd 'THÁNG' MM 'NĂM' yyyy");
+        }
+        <h4 class="fw-bold py-3">BÁO CÁO CÔNG VIỆC - @formattedDate</h4>
+        <div class="row">
+            <div class="card-body">
+                <form id="formAccountSettings" method="POST" onsubmit="return false">
+                    <div class="row">
+
+                        @{
+                            tblNHANVIEN item = ViewBag.nhanvien;
+                            <div class="mb-3 col-md-2">
+                                <label for="ID_nhanvien" class="form-label">Mã nhân viên</label>
+                                <input readonly="true"
+                                       class="form-control"
+                                       type="text"
+                                       id="ID_nhanvien"
+                                       name="ID_nhanvien"
+                                       value="@item.ID_NHANVIEN"
+                                       autofocus />
+                            </div>
+                            <div class="mb-3 col-md-5">
+                                <label for="email" class="form-label">Email</label>
+                                <input class="form-control" type="text" id="email" name="email" value="@Session["EMAIL"]" readonly="true" />
+                            </div>
+                            <div class="mb-3 col-md-5">
+                                <label for="hoten" class="form-label">Họ tên</label>
+                                <input class="form-control" type="text" name="hoten" id="hoten" readonly="true" value="@item.HOTEN" />
+                            </div>
+                            <div class="mb-3 col-md-4">
+                                <label for="phongban" class="form-label">Phòng ban</label>
+                                <input class="form-control" type="text" id="phongban" name="phongban" value="@Session["ID_PHONGBAN"]" readonly="true" />
+                            </div>
+
+                            <div class="mb-3 col-md-3">
+                                <label for="chucvu" class="form-label">Chức vụ</label>
+                                <input class="form-control" type="text" id="chucvu" name="chucvu" value="@Session["ID_CHUCVU"]" readonly="true" />
+                            </div>
+                            <div class="mb-3 col-md-3">
+                                <label for="trinhdo" class="form-label">Trình độ</label>
+                                <input class="form-control" type="text" id="trinhdo" name="trinhdo" value="@Session["ID_TRINHDO"]" readonly="true" />
+                            </div>
+                            <div class="mb-3 col-md-12">
+                                <label for="content" class="form-label">Nội dung công việc</label>
+                                <textarea class="form-control" rows="5" name="noidungcongviec"></textarea>
+                            </div>
+                        }
+
+
+
+                    </div>
+                    <div class="mt-2">
+                        <button id="btnUpdate" class="btn btn-primary me-2">Gửi báo cáo</button>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+
+
+
+    </div>
+    <!-- / Content -->
+
+
+
+
+</div>
+<!-- Content wrapper -->
+<script>
+    $(document).ready(function () {
+  $('#btnUpdate').click(function (e) {
+    e.preventDefault();
+      var noidung = $('textarea[name=noidungcongviec]').val();
+    if (noidung.trim() === '') {
+      alert('Bạn cần điền nội dung công việc!');
+      return;
+    }
+    $.ajax({
+      type: 'POST',
+      url: '@Url.Action("SendReport", "Staff")',
+      data: $('form').serialize(),
+      success: function (data) {
+          alert("Gửi báo cáo hàng ngày thành công");
+          $('#btnUpdate').hide(); // ẩn nút gửi báo cáo
+          $('textarea[name=noidungcongviec]').val('');
+      },
+      error: function (data) {
+        alert("Không gửi được báo cáo hàng ngày");
+      }
+    });
+  });
+});
+
+</script>
